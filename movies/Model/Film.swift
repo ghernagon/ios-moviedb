@@ -10,16 +10,16 @@ import Foundation
 
 struct Film: Decodable {
     let id: Int
-    let adult: Int
+    let adult: Bool
     let title: String
-    let popularity: String
+    let popularity: Float
     let overview: String
     let originalTitle: String
     let poster: String
-    let backdrop: String
+    let backdrop: String?
     let releaseDate: String
     let genres: [Int]
-    let voteAverage: Int
+    let voteAverage: Float
     let voteCount: Int
     let originalLanguage: String
     
