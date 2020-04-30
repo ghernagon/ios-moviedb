@@ -24,7 +24,7 @@ class DetailViewController: UIViewController {
         
         title = "Detail"
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -35,27 +35,23 @@ class DetailViewController: UIViewController {
             ratingLabel.text = "\(film.voteAverage)"
             
             if let coverUrl = film.backdrop {
-                filmsManager.fetchCoverImageFor(cover: coverUrl) { (image, error) in
-                    if (error != nil) {
-                        print(error)
-                        self.coverImage.image = #imageLiteral(resourceName: "placeholder")
-                    } else {
-                        self.coverImage.image = image
-                    }
-                }
+                fetchCoverImageFrom(coverUrl) { (_) in }
             }
         }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func fetchCoverImageFrom(_ coverUrl: String, completionHandler: @escaping(_ status: Bool) -> Void) {
+        filmsManager.fetchCoverImageFor(cover: coverUrl) { (image, error) in
+            if (error != nil) {
+                print(error)
+                let fallbackImage: UIImage? = UIImage(named: "placeholder")
+                self.coverImage.image = fallbackImage
+                completionHandler(false)
+            } else {
+                self.coverImage.image = image
+                completionHandler(true)
+            }
+        }
     }
-    */
 
 }

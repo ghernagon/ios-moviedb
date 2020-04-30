@@ -10,18 +10,30 @@ import UIKit
 
 class FilmsTableViewController: UITableViewController {
     
-    private var filmsManager = FilmsManager()
+    var filmsManager = FilmsManager()
     var films: Films?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Popular Movies"
-        
-        filmsManager.delegate = self
-        filmsManager.fetchPopular()
+
+        self.fetchPopular { (_) in }
         
         tableView.rowHeight = 50.0
+    }
+    
+    func fetchPopular(completionHandler: @escaping(_ status: Bool) -> Void) {
+        filmsManager.fetchPopular { (films, error) in
+            if error != nil {
+                print(error)
+                completionHandler(false)
+            } else {
+                self.films = films
+                self.tableView.reloadData()
+                completionHandler(true)
+            }
+        }
     }
     
     // MARK: - Table view data source
@@ -61,15 +73,13 @@ extension FilmsTableViewController {
     }
 }
 
-extension FilmsTableViewController: FilmsManagerDelegate {
-    func didFetchResults(films: Films) {
-        self.films = films
-        tableView.reloadData()
-    }
-    
-    func didFailWithError(error: String?) {
-        debugPrint(error)
-    }
-    
-    
-}
+//extension FilmsTableViewController: FilmsManagerDelegate {
+//    func didFetchResults(films: Films) {
+//        self.films = films
+//        tableView.reloadData()
+//    }
+//
+//    func didFailWithError(error: String?) {
+//        debugPrint(error)
+//    }
+//}
